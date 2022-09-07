@@ -46,3 +46,15 @@ export const validatePassword: validatorType = (password: string): string | null
 
     return null;
 }
+
+export const validateOneWord: validatorType = (word: string): string | null => {
+    if (!word) {
+        return 'Campo obrigatório';
+    }
+
+    if (word.split(' ').length > 1) {
+        return 'Campo inválido';
+    }
+
+    return null;
+}

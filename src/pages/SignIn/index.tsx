@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Card, Typography, Box, TextField, Button } from '@mui/material';
 import { validateField, validateEmail, validatePassword } from '../../utils/validators/validators';
+import { Link } from 'react-router-dom';
 
 const SignInPage = () => {
 
@@ -98,8 +99,8 @@ const SignInPage = () => {
 
                 <Box sx={{ height: 20 }} />
 
-                <Typography align='center' fontSize={12} fontWeight='bold' >
-                    Não possui uma conta? Cadastre-se
+                <Typography align='center' fontSize={12} >
+                    Não possui uma conta ? <Link to="/auth/sign/up" > Cadastre-se </Link>
                 </Typography>
 
                 <Box sx={{ height: 20 }} />
