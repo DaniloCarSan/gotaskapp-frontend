@@ -1,7 +1,9 @@
 import { AuthStateType } from "../types";
 
-export const authInitialState: AuthStateType = {
+const AuthInitialState: AuthStateType = {
     isAuth: false,
     token: null,
     user: null,
 };
+
+export default AuthInitialState;

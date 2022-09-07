@@ -1,10 +1,12 @@
 import { AuthActionsType } from "../types";
 
-export const actions: AuthActionsType = {
+const AuthActions: AuthActionsType = {
     SET_IS_AUTH: (state, payload) => {
         return {
             ...state,
-            isAuth: payload.payload.isAuth,
+            isAuth: payload.isAuth,
         }
     }
 };
+
+export default AuthActions;

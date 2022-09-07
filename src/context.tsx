@@ -1,7 +1,7 @@
 import { createContext, useReducer } from 'react';
 
-import { authInitialState } from "./modules/auth/reducer/initial_state";
-import { authReducer } from "./modules/auth/reducer/reducer";
+import AuthInitialState from "./modules/auth/reducer/initial_state";
+import AuthReducer from "./modules/auth/reducer/reducer";
 import { AuthStateType } from "./modules/auth/types";
 import { reducerActionType } from "./utils/types";
 
@@ -19,7 +19,7 @@ type contextProviderType = {
 }
 
 const contextInitialState: contextInitialStateType = {
-    auth: authInitialState
+    auth: AuthInitialState
 };
 
 export const AppContext = createContext<contextType>({
@@ -28,7 +28,7 @@ export const AppContext = createContext<contextType>({
 });
 
 const combineReducers = (state: contextInitialStateType, action: reducerActionType) => ({
-    auth: authReducer(state.auth, action)
+    auth: AuthReducer(state.auth, action)
 });
 
 export const AppContextProvider = ({ children }: contextProviderType) => {
