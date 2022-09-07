@@ -174,7 +174,7 @@ const SignUpPage = () => {
                     onClick={handleSubmitLogin}
                     disabled={!isFormValid}
                 >
-                    Entrar
+                    Criar conta
                 </Button>
 
                 <Box sx={{ height: 20 }} />
