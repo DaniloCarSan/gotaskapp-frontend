@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Card, Typography, Box, TextField, Button } from '@mui/material';
-import { validateField, validateEmail, validatePassword } from '../../utils/validators/validators';
+import { validateField, validateEmail, validatePassword } from '../../../../utils/validators/validators';
 import { Link } from 'react-router-dom';
 
 const SignInPage = () => {
