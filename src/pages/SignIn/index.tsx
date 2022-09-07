@@ -8,6 +8,15 @@ const SignInPage = () => {
     const [emailError, setEmailError] = React.useState<string | null>(null);
     const [password, setPassword] = React.useState('');
     const [passwordError, setPasswordError] = React.useState<string | null>(null);
+    const [isFormValid, setIsFormValid] = React.useState(false);
+
+    React.useEffect(() => {
+        setIsFormValid(
+            (emailError == null && passwordError == null)
+            &&
+            (email !== '' && password !== '')
+        );
+    }, [emailError, passwordError, email, password]);
 
     const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(event.target.value);
@@ -23,6 +32,10 @@ const SignInPage = () => {
         ], (msg) => {
             setPasswordError(msg);
         });
+    }
+
+    const handleSubmitLogin = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+
     }
 
     return (
@@ -77,7 +90,8 @@ const SignInPage = () => {
                 <Button
                     variant="contained"
                     sx={{ width: '100%', mt: 2 }}
-                    disabled={emailError != null || passwordError != null}
+                    onClick={handleSubmitLogin}
+                    disabled={!isFormValid}
                 >
                     Entrar
                 </Button>

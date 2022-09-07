@@ -41,7 +41,7 @@ export const validatePassword: validatorType = (password: string): string | null
     }
 
     if (password.length < 6) {
-        return 'Senha deve ter no mínimo 6 caracteres';
+        return 'mínimo 6 caracteres';
     }
 
     return null;
