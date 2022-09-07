@@ -36,7 +36,7 @@ const SignInPage = () => {
     }
 
     const handleSubmitLogin = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-
+        event.preventDefault();
     }
 
     return (

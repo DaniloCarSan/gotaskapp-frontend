@@ -1,9 +1,9 @@
 import { useRoutes } from 'react-router-dom';
 
-import MainPage from '../modules/site/pages/Main';
-import NotFound from '../modules/site/pages/NotFound';
+import MainPage from './modules/site/pages/Main';
+import NotFound from './modules/site/pages/NotFound';
 
-import AuthRoutes from '../modules/auth/routes';
+import AuthRoutes from './modules/auth/routes';
 
 const AppRoutes = () => {
     return useRoutes([

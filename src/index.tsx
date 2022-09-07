@@ -8,20 +8,22 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@mui/material/styles';
 
 import theme from './utils/theme/theme';
+import { AppContextProvider } from './context';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
-
-    <BrowserRouter>
-      <ThemeProvider theme={theme}>
-        {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-        <CssBaseline />
-        <App />
-      </ThemeProvider>
-    </BrowserRouter>
+    <AppContextProvider>
+      <BrowserRouter>
+        <ThemeProvider theme={theme}>
+          {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+          <CssBaseline />
+          <App />
+        </ThemeProvider>
+      </BrowserRouter>
+    </AppContextProvider>
   </React.StrictMode>
 );
 
