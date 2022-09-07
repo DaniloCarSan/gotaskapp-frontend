@@ -1,0 +1,102 @@
+import * as React from 'react';
+import { Card, Typography, Box, TextField, Button } from '@mui/material';
+import { validateField, validateEmail, validatePassword } from '../../utils/validators/validators';
+
+const SignInPage = () => {
+
+    const [email, setEmail] = React.useState('');
+    const [emailError, setEmailError] = React.useState<string | null>(null);
+    const [password, setPassword] = React.useState('');
+    const [passwordError, setPasswordError] = React.useState<string | null>(null);
+
+    const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setEmail(event.target.value);
+        validateField(event.target.value, [
+            validateEmail
+        ], (msg) => setEmailError(msg));
+    }
+
+    const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setPassword(event.target.value);
+        validateField(event.target.value, [
+            validatePassword
+        ], (msg) => {
+            setPasswordError(msg);
+        });
+    }
+
+    return (
+        <Box sx={{
+            flexGrow: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100vh',
+            width: '100vw',
+            backgroundColor: 'grey.300',
+        }}>
+            <Card elevation={3} sx={{ p: 2, flexDirection: "column", width: 250 }}>
+
+                <Typography variant="h6" align='center' fontWeight='bold'>
+                    Login
+                </Typography>
+
+                <Box sx={{ height: 15 }} />
+
+                <Typography variant="subtitle2" align='center' >
+                    Faça login com seu endereço de e-mail e senha.
+                </Typography>
+
+                <TextField
+                    label="Email"
+                    variant="outlined"
+                    size="small"
+                    type="email"
+                    value={email}
+                    required
+                    error={emailError !== null}
+                    helperText={emailError}
+                    onChange={handleEmailChange}
+                    sx={{ width: '100%', mt: 2 }}
+                />
+
+                <TextField
+                    label="Senha"
+                    type="password"
+                    size="small"
+                    variant="outlined"
+                    value={password}
+                    error={passwordError !== null}
+                    helperText={passwordError}
+                    required
+                    onChange={handlePasswordChange}
+                    sx={{ width: '100%', mt: 2 }}
+                />
+
+                <Button
+                    variant="contained"
+                    sx={{ width: '100%', mt: 2 }}
+                    disabled={emailError != null || passwordError != null}
+                >
+                    Entrar
+                </Button>
+
+                <Box sx={{ height: 20 }} />
+
+                <Typography align='center' fontSize={12} fontWeight='bold' >
+                    Não possui uma conta? Cadastre-se
+                </Typography>
+
+                <Box sx={{ height: 20 }} />
+
+                <Typography align='center' fontSize={12} fontWeight='bold' >
+                    Esqueceu sua senha?
+                </Typography>
+
+            </Card>
+        </Box>
+    );
+}
+
+export default SignInPage;
