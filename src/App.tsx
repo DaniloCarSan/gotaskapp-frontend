@@ -1,10 +1,10 @@
 import React from 'react';
 import './App.css';
 
-import SignInPage from './pages/SignIn';
+import AppRoutes from './routes';
 
 function App() {
-  return <SignInPage />;
+  return <AppRoutes />;
 }
 
 export default App;

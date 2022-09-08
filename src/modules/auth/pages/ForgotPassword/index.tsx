@@ -1,13 +1,18 @@
 import * as React from 'react';
 import { Card, Typography, Box, TextField, Button } from '@mui/material';
-import { validateField, validateEmail, validatePassword } from '../../utils/validators/validators';
+import { validateField, validateEmail } from '../../../../utils/validators/validators';
+import { Link } from 'react-router-dom';
+import Copyright from '../../../../utils/components/Copyright';
 
-const SignInPage = () => {
+const ForgotPasswordPage = () => {
 
     const [email, setEmail] = React.useState('');
     const [emailError, setEmailError] = React.useState<string | null>(null);
-    const [password, setPassword] = React.useState('');
-    const [passwordError, setPasswordError] = React.useState<string | null>(null);
+    const [isFormValid, setIsFormValid] = React.useState(false);
+
+    React.useEffect(() => {
+        setIsFormValid(emailError == null && email !== '');
+    }, [email, emailError]);
 
     const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(event.target.value);
@@ -16,13 +21,8 @@ const SignInPage = () => {
         ], (msg) => setEmailError(msg));
     }
 
-    const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setPassword(event.target.value);
-        validateField(event.target.value, [
-            validatePassword
-        ], (msg) => {
-            setPasswordError(msg);
-        });
+    const handleSubmitForgotPassword = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+
     }
 
     return (
@@ -39,13 +39,13 @@ const SignInPage = () => {
             <Card elevation={3} sx={{ p: 2, flexDirection: "column", width: 250 }}>
 
                 <Typography variant="h6" align='center' fontWeight='bold'>
-                    Login
+                    Esqueci a senha
                 </Typography>
 
                 <Box sx={{ height: 15 }} />
 
                 <Typography variant="subtitle2" align='center' >
-                    Faça login com seu endereço de e-mail e senha.
+                    Digite seu e-mail para recuperar sua senha.
                 </Typography>
 
                 <TextField
@@ -61,42 +61,25 @@ const SignInPage = () => {
                     sx={{ width: '100%', mt: 2 }}
                 />
 
-                <TextField
-                    label="Senha"
-                    type="password"
-                    size="small"
-                    variant="outlined"
-                    value={password}
-                    error={passwordError !== null}
-                    helperText={passwordError}
-                    required
-                    onChange={handlePasswordChange}
-                    sx={{ width: '100%', mt: 2 }}
-                />
-
                 <Button
                     variant="contained"
                     sx={{ width: '100%', mt: 2 }}
-                    disabled={emailError != null || passwordError != null}
+                    onClick={handleSubmitForgotPassword}
+                    disabled={!isFormValid}
                 >
-                    Entrar
+                    Resetar senha
                 </Button>
 
                 <Box sx={{ height: 20 }} />
 
-                <Typography align='center' fontSize={12} fontWeight='bold' >
-                    Não possui uma conta? Cadastre-se
-                </Typography>
-
-                <Box sx={{ height: 20 }} />
-
-                <Typography align='center' fontSize={12} fontWeight='bold' >
-                    Esqueceu sua senha?
+                <Typography align='center' fontSize={12} >
+                    <Link to="/auth/sign/in" > Voltar </Link>
                 </Typography>
 
             </Card>
+            <Copyright />
         </Box>
     );
 }
 
-export default SignInPage;
+export default ForgotPasswordPage;
