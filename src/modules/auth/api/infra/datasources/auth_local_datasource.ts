@@ -18,6 +18,10 @@ export class AuthLocalDatasource implements IAuthLocalDatasource {
         localStorage.setItem('credential', JSON.stringify(credential));
     }
 
+    signOut(): void {
+        localStorage.removeItem('credential');
+    }
+
 }
 
 export const instance = new AuthLocalDatasource();

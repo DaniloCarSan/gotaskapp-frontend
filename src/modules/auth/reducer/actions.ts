@@ -14,6 +14,13 @@ const AuthActions: AuthActionsType = {
             isAuth: false,
             credential: null
         }
+    },
+    'SIGN_OUT_SUCCESS': (state, payload) => {
+        return {
+            ...state,
+            isAuth: false,
+            credential: null
+        }
     }
 
 };

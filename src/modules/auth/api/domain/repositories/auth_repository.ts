@@ -9,4 +9,5 @@ export default abstract class IAuthRepository<T> {
     abstract setCredential: (credential: Credential) => void;
     abstract getCredential: () => Credential | null;
     abstract signIn(auth: auth): Promise<Credential>;
+    abstract signOut(): void;
 }

@@ -35,6 +35,10 @@ export class AuthRepository implements IAuthRepository<AxiosInstance> {
 
         return response;
     }
+
+    signOut(): void {
+        this.localDataSource.signOut();
+    }
 }
 
 export const instance = new AuthRepository(instanceAuthApiDatasource, instanceAuthLocalDatasource);
