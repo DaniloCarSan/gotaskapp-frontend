@@ -1,4 +1,4 @@
-import { AxiosError, AxiosInstance } from "axios";
+import { AxiosInstance } from "axios";
 
 import IAuthApiDatasource from "../../domain/datasources/auth_api_datasource";
 import IAuthRepository from "../../domain/repositories/auth_repository";

@@ -35,9 +35,7 @@ const AuthenticatedRoute = ({ children }: paramsType) => {
                 });
             }
         }
-        setTimeout(() => {
-            setLoading(false);
-        }, 1000);
+        setLoading(false);
     }, [state.auth.isAuth, dispatch]);
 
     if (loading) {
