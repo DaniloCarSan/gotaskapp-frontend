@@ -1,16 +1,30 @@
 import * as React from 'react';
-import { Card, Typography, Box, TextField, Button } from '@mui/material';
+import { Card, Typography, Box, TextField, Button, CircularProgress, Alert, Snackbar } from '@mui/material';
 import { validateField, validateEmail, validatePassword } from '../../../../utils/validators/validators';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Copyright from '../../../../utils/components/Copyright';
+
+import { AppContext } from '../../../../context';
+
+import { instance as authRepository } from '../../api/infra/repositories/auth_repository';
 
 const SignInPage = () => {
 
+    const navigate = useNavigate();
+    const { state, dispatch } = React.useContext(AppContext);
     const [email, setEmail] = React.useState('');
     const [emailError, setEmailError] = React.useState<string | null>(null);
     const [password, setPassword] = React.useState('');
     const [passwordError, setPasswordError] = React.useState<string | null>(null);
     const [isFormValid, setIsFormValid] = React.useState(false);
+    const [loading, setLoading] = React.useState(false);
+    const [error, setError] = React.useState<string | null>(null);
+
+    React.useEffect(() => {
+        if (state.auth.isAuth) {
+            navigate('/');
+        }
+    }, [state.auth.isAuth, navigate]);
 
     React.useEffect(() => {
         setIsFormValid(
@@ -36,8 +50,26 @@ const SignInPage = () => {
         });
     }
 
-    const handleSubmitLogin = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    const handleSubmitLogin = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         event.preventDefault();
+        setLoading(true);
+        authRepository.signIn({
+            email,
+            password
+        }).then((credential) => {
+            setLoading(false);
+            dispatch({
+                type: 'SIGN_IN_SUCCESS',
+                payload: {
+                    isAuth: true,
+                    credential: credential
+                }
+            });
+            navigate('/', { replace: true });
+        }).catch((error) => {
+            setLoading(false);
+            setError(error.message);
+        });
     }
 
     return (
@@ -93,9 +125,9 @@ const SignInPage = () => {
                     variant="contained"
                     sx={{ width: '100%', mt: 2 }}
                     onClick={handleSubmitLogin}
-                    disabled={!isFormValid}
+                    disabled={!isFormValid || loading}
                 >
-                    Entrar
+                    {loading ? <CircularProgress color='primary' size={23} /> : 'Entrar'}
                 </Button>
 
                 <Box sx={{ height: 20 }} />
@@ -112,6 +144,17 @@ const SignInPage = () => {
 
             </Card>
             <Copyright />
+
+            <Snackbar
+                open={error != null}
+                autoHideDuration={3000}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center', }}
+                onClose={() => setError(null)}  >
+                <Alert severity="error">
+                    {error}
+                </Alert>
+            </Snackbar>
+
         </Box>
     );
 }

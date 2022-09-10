@@ -1,9 +1,8 @@
-import { UserType } from "../user/types";
+import { Credential } from "./api/domain/entities/credential";
 
 export type AuthStateType = {
     isAuth: boolean;
-    token: string | null;
-    user: UserType | null;
+    credential: Credential | null;
 }
 
 export type AuthActionsType = {

@@ -2,8 +2,7 @@ import { AuthStateType } from "../types";
 
 const AuthInitialState: AuthStateType = {
     isAuth: false,
-    token: null,
-    user: null,
+    credential: null
 };
 
 export default AuthInitialState;
