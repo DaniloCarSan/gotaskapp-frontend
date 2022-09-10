@@ -36,7 +36,7 @@ const ForgotPasswordPage = () => {
             width: '100vw',
             backgroundColor: 'grey.300',
         }}>
-            <Card elevation={3} sx={{ p: 2, flexDirection: "column", width: 250 }}>
+            <Card elevation={3} sx={{ p: 2, flexDirection: "column", width: 300 }}>
 
                 <Typography variant="h6" align='center' fontWeight='bold'>
                     Esqueci a senha
