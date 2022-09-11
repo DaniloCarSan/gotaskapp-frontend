@@ -5,8 +5,9 @@ import IAuthRepository from "../../domain/repositories/auth_repository";
 import { instance as instanceAuthApiDatasource } from "../datasources/auth_api_datasource";
 import { instance as instanceAuthLocalDatasource } from "../datasources/auth_local_datasource";
 
-import { Credential } from "../../domain/entities/credential";
-import { auth } from "../../domain/entities/auth";
+import Credential from "../../domain/entities/credential";
+import Auth from "../../domain/entities/auth";
+import User from "../../domain/entities/user";
 import IAuthLocalDatasource from "../../domain/datasources/auth_local_datasource";
 
 export class AuthRepository implements IAuthRepository<AxiosInstance> {
@@ -28,7 +29,7 @@ export class AuthRepository implements IAuthRepository<AxiosInstance> {
         return this.localDataSource.getCredential();
     }
 
-    async signIn(auth: auth): Promise<Credential> {
+    async signIn(auth: Auth): Promise<Credential> {
         var response = await this.apiDataSource.signIn(auth);
 
         this.setCredential(response);
@@ -38,6 +39,10 @@ export class AuthRepository implements IAuthRepository<AxiosInstance> {
 
     signOut(): void {
         this.localDataSource.signOut();
+    }
+
+    async signUp(user: User): Promise<void> {
+        return await this.apiDataSource.signUp(user);
     }
 }
 

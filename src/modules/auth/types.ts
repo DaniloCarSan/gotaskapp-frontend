@@ -1,4 +1,4 @@
-import { Credential } from "./api/domain/entities/credential";
+import Credential from "./api/domain/entities/credential";
 
 export type AuthStateType = {
     isAuth: boolean;

@@ -1,5 +1,5 @@
 import IAuthLocalDatasource from "../../domain/datasources/auth_local_datasource";
-import { Credential } from "../../domain/entities/credential";
+import Credential from "../../domain/entities/credential";
 
 export class AuthLocalDatasource implements IAuthLocalDatasource {
 

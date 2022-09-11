@@ -1,6 +1,8 @@
-import { User } from "./user"
+import User from "./user"
 
-export type Credential = {
+type Credential = {
     user: User,
     token: string
 }
+
+export default Credential;

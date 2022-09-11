@@ -1,8 +1,10 @@
-export type User = {
+type User = {
     id?: number;
+    avatar?: string;
     firstname: string;
     lastname: string;
     email: string;
     password?: string;
-    avatar?: string;
 }
+
+export default User;

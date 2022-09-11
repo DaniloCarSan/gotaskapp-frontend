@@ -1,13 +1,16 @@
 import * as React from 'react';
-import { Card, Typography, Box, TextField, Button } from '@mui/material';
-import { validateField, validateEmail, validatePassword, validateOneWord } from '../../../../utils/validators/validators';
 import { Link } from 'react-router-dom';
+import { Card, Typography, Box, TextField, Button } from '@mui/material';
+
+import { validateField, validateEmail, validatePassword, validateOneWord } from '../../../../utils/validators/validators';
 import Copyright from '../../../../utils/components/Copyright';
+
+import { instance as authRepository } from '../../api/infra/repositories/auth_repository';
 
 const SignUpPage = () => {
 
-    const [name, setName] = React.useState('');
-    const [nameError, setNameError] = React.useState<string | null>(null);
+    const [firstName, setFirstName] = React.useState('');
+    const [firstNameError, setFirstNameError] = React.useState<string | null>(null);
     const [lastName, setLastName] = React.useState('');
     const [lastNameError, setLastNameError] = React.useState<string | null>(null);
     const [email, setEmail] = React.useState('');
@@ -21,27 +24,27 @@ const SignUpPage = () => {
     React.useEffect(() => {
         setIsFormValid(
             (
-                nameError == null &&
+                firstNameError == null &&
                 lastNameError == null &&
                 emailError == null &&
                 passwordError == null && passwordConfirmError == null
             )
             &&
             (
-                name !== '' &&
+                firstName !== '' &&
                 lastName !== '' &&
                 email !== '' &&
                 password !== '' &&
                 passwordConfirm !== ''
             )
         );
-    }, [name, lastName, email, password, passwordConfirm, nameError, lastNameError, emailError, passwordError, passwordConfirmError]);
+    }, [firstName, lastName, email, password, passwordConfirm, firstNameError, lastNameError, emailError, passwordError, passwordConfirmError]);
 
     const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setName(event.target.value);
+        setFirstName(event.target.value);
         validateField(event.target.value, [
             validateOneWord
-        ], (msg) => setNameError(msg));
+        ], (msg) => setFirstNameError(msg));
     }
 
     const handleLastNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -77,7 +80,13 @@ const SignUpPage = () => {
         }
     }
 
-    const handleSubmitLogin = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    const handleSubmitSignUp = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        authRepository.signUp({
+            firstname: firstName,
+            lastname: lastName,
+            email: email,
+            password: password
+        });
 
     }
 
@@ -109,10 +118,10 @@ const SignUpPage = () => {
                     variant="outlined"
                     size="small"
                     type='text'
-                    value={name}
+                    value={firstName}
                     required
-                    error={nameError !== null}
-                    helperText={nameError}
+                    error={firstNameError !== null}
+                    helperText={firstNameError}
                     onChange={handleNameChange}
                     sx={{ width: '100%', mt: 2 }}
                 />
@@ -172,7 +181,7 @@ const SignUpPage = () => {
                 <Button
                     variant="contained"
                     sx={{ width: '100%', mt: 2 }}
-                    onClick={handleSubmitLogin}
+                    onClick={handleSubmitSignUp}
                     disabled={!isFormValid}
                 >
                     Criar conta

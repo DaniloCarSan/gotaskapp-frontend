@@ -1,5 +1,6 @@
-import { auth } from "../entities/auth";
-import { Credential } from "../entities/credential";
+import Auth from "../entities/auth";
+import Credential from "../entities/credential";
+import User from "../entities/user";
 import IAuthApiDatasource from "../datasources/auth_api_datasource";
 import IAuthLocalDatasource from "../datasources/auth_local_datasource";
 
@@ -8,6 +9,7 @@ export default abstract class IAuthRepository<T> {
     abstract localDataSource: IAuthLocalDatasource;
     abstract setCredential: (credential: Credential) => void;
     abstract getCredential: () => Credential | null;
-    abstract signIn(auth: auth): Promise<Credential>;
+    abstract signIn(auth: Auth): Promise<Credential>;
     abstract signOut(): void;
+    abstract signUp(user: User): Promise<void>;
 }

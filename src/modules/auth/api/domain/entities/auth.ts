@@ -1,4 +1,6 @@
-export type auth = {
+type Auth = {
     email: string,
     password: string
 }
+
+export default Auth;
