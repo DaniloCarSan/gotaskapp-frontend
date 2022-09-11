@@ -12,20 +12,35 @@ const SignInPage = () => {
 
     const navigate = useNavigate();
     const { state, dispatch } = React.useContext(AppContext);
-    const [email, setEmail] = React.useState('');
-    const [emailError, setEmailError] = React.useState<string | null>(null);
-    const [password, setPassword] = React.useState('');
-    const [passwordError, setPasswordError] = React.useState<string | null>(null);
+
     const [isFormValid, setIsFormValid] = React.useState(false);
     const [loading, setLoading] = React.useState(false);
     const [error, setError] = React.useState<string | null>(null);
 
+    /**
+     * Form fields
+    */
+    const [email, setEmail] = React.useState('');
+    const [password, setPassword] = React.useState('');
+
+    /**
+     * Form fields errors 
+    */
+    const [emailError, setEmailError] = React.useState<string | null>(null);
+    const [passwordError, setPasswordError] = React.useState<string | null>(null);
+
+    /**
+     * Redirect to home if user is already logged in 
+    */
     React.useEffect(() => {
         if (state.auth.isAuth) {
             navigate('/');
         }
     }, [state.auth.isAuth, navigate]);
 
+    /**
+     * Check if form is valid
+    */
     React.useEffect(() => {
         setIsFormValid(
             (emailError == null && passwordError == null)
@@ -34,6 +49,9 @@ const SignInPage = () => {
         );
     }, [emailError, passwordError, email, password]);
 
+    /**
+     * Set and validate email
+    */
     const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(event.target.value);
         validateField(event.target.value, [
@@ -41,6 +59,9 @@ const SignInPage = () => {
         ], (msg) => setEmailError(msg));
     }
 
+    /**
+     * Set and validate password
+    */
     const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setPassword(event.target.value);
         validateField(event.target.value, [
@@ -50,6 +71,9 @@ const SignInPage = () => {
         });
     }
 
+    /**
+     * Handle form submit
+    */
     const handleSubmitLogin = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         event.preventDefault();
         setLoading(true);

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Card, Typography, Box, TextField, Button } from '@mui/material';
 
 import { validateField, validateEmail, validatePassword, validateOneWord } from '../../../../utils/validators/validators';
@@ -9,18 +9,33 @@ import { instance as authRepository } from '../../api/infra/repositories/auth_re
 
 const SignUpPage = () => {
 
-    const [firstName, setFirstName] = React.useState('');
-    const [firstNameError, setFirstNameError] = React.useState<string | null>(null);
-    const [lastName, setLastName] = React.useState('');
-    const [lastNameError, setLastNameError] = React.useState<string | null>(null);
-    const [email, setEmail] = React.useState('');
-    const [emailError, setEmailError] = React.useState<string | null>(null);
-    const [password, setPassword] = React.useState('');
-    const [passwordError, setPasswordError] = React.useState<string | null>(null);
-    const [passwordConfirm, setPasswordConfirm] = React.useState('');
-    const [passwordConfirmError, setPasswordConfirmError] = React.useState<string | null>(null);
-    const [isFormValid, setIsFormValid] = React.useState(false);
+    const navigate = useNavigate();
 
+    const [isFormValid, setIsFormValid] = React.useState(false);
+    const [loading, setLoading] = React.useState(false);
+    const [error, setError] = React.useState<string | null>(null);
+
+    /**
+     *  Form fields 
+    */
+    const [firstName, setFirstName] = React.useState('');
+    const [lastName, setLastName] = React.useState('');
+    const [email, setEmail] = React.useState('');
+    const [password, setPassword] = React.useState('');
+    const [passwordConfirm, setPasswordConfirm] = React.useState('');
+
+    /**
+     *  Form fields errors 
+    */
+    const [firstNameError, setFirstNameError] = React.useState<string | null>(null);
+    const [lastNameError, setLastNameError] = React.useState<string | null>(null);
+    const [emailError, setEmailError] = React.useState<string | null>(null);
+    const [passwordError, setPasswordError] = React.useState<string | null>(null);
+    const [passwordConfirmError, setPasswordConfirmError] = React.useState<string | null>(null);
+
+    /**
+     * Check if form is valid
+    */
     React.useEffect(() => {
         setIsFormValid(
             (
@@ -40,6 +55,9 @@ const SignUpPage = () => {
         );
     }, [firstName, lastName, email, password, passwordConfirm, firstNameError, lastNameError, emailError, passwordError, passwordConfirmError]);
 
+    /*
+     * Set and validate first name
+    */
     const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setFirstName(event.target.value);
         validateField(event.target.value, [
@@ -47,6 +65,9 @@ const SignUpPage = () => {
         ], (msg) => setFirstNameError(msg));
     }
 
+    /*
+    * Set and validate last name
+    */
     const handleLastNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setLastName(event.target.value);
         validateField(event.target.value, [
@@ -54,6 +75,9 @@ const SignUpPage = () => {
         ], (msg) => setLastNameError(msg));
     }
 
+    /*
+    * Set and validate email
+    */
     const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(event.target.value);
         validateField(event.target.value, [
@@ -61,6 +85,9 @@ const SignUpPage = () => {
         ], (msg) => setEmailError(msg));
     }
 
+    /*
+    * Set and validate password
+    */
     const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setPassword(event.target.value);
         validateField(event.target.value, [
@@ -70,6 +97,9 @@ const SignUpPage = () => {
         });
     }
 
+    /*
+    * Set and validate password confirm
+    */
     const handlePasswordConfirmChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setPasswordConfirm(event.target.value);
 
@@ -79,15 +109,20 @@ const SignUpPage = () => {
             setPasswordConfirmError(null);
         }
     }
-
+    /*
+    * Handle form submit
+    */
     const handleSubmitSignUp = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         authRepository.signUp({
             firstname: firstName,
             lastname: lastName,
             email: email,
             password: password
+        }).then((response) => {
+            console.log(response);
+        }).catch((error) => {
+            console.log(error);
         });
-
     }
 
     return (
