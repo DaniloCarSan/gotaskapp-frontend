@@ -1,18 +1,18 @@
 import * as React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Card, Typography, Box, TextField, Button } from '@mui/material';
+import { Link } from 'react-router-dom';
+import { Card, Typography, Box, TextField, Button, CircularProgress, Alert, Snackbar } from '@mui/material';
 
 import { validateField, validateEmail, validatePassword, validateOneWord } from '../../../../utils/validators/validators';
 import Copyright from '../../../../utils/components/Copyright';
+import SignUpDialogSuccess from './Components/SignUpDialogSuccess';
 
 import { instance as authRepository } from '../../api/infra/repositories/auth_repository';
 
 const SignUpPage = () => {
 
-    const navigate = useNavigate();
-
     const [isFormValid, setIsFormValid] = React.useState(false);
     const [loading, setLoading] = React.useState(false);
+    const [success, setSuccess] = React.useState(false);
     const [error, setError] = React.useState<string | null>(null);
 
     /**
@@ -109,19 +109,40 @@ const SignUpPage = () => {
             setPasswordConfirmError(null);
         }
     }
+
+    /*
+    * Reset form
+    */
+    const resetForm = () => {
+        setFirstName('');
+        setLastName('');
+        setEmail('');
+        setPassword('');
+        setPasswordConfirm('');
+    }
+
     /*
     * Handle form submit
     */
     const handleSubmitSignUp = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        setLoading(true);
         authRepository.signUp({
             firstname: firstName,
             lastname: lastName,
             email: email,
             password: password
         }).then((response) => {
-            console.log(response);
+            setLoading(false);
+            setSuccess(true);
+            resetForm();
         }).catch((error) => {
-            console.log(error);
+            setSuccess(false);
+            setLoading(false);
+            if (error) {
+                setError(error.message);
+            } else {
+                setError('Unknown error');
+            }
         });
     }
 
@@ -153,8 +174,8 @@ const SignUpPage = () => {
                     variant="outlined"
                     size="small"
                     type='text'
-                    value={firstName}
                     required
+                    value={firstName}
                     error={firstNameError !== null}
                     helperText={firstNameError}
                     onChange={handleNameChange}
@@ -217,9 +238,9 @@ const SignUpPage = () => {
                     variant="contained"
                     sx={{ width: '100%', mt: 2 }}
                     onClick={handleSubmitSignUp}
-                    disabled={!isFormValid}
+                    disabled={!isFormValid || loading}
                 >
-                    Criar conta
+                    {loading ? <CircularProgress color='primary' size={23} /> : 'Criar conta'}
                 </Button>
 
                 <Box sx={{ height: 20 }} />
@@ -231,6 +252,18 @@ const SignUpPage = () => {
             </Card>
 
             <Copyright />
+
+            <Snackbar
+                open={error != null}
+                autoHideDuration={5000}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center', }}
+                onClose={() => setError(null)}  >
+                <Alert severity="error">
+                    {error}
+                </Alert>
+            </Snackbar>
+
+            {success && <SignUpDialogSuccess />}
 
         </Box>
     );
