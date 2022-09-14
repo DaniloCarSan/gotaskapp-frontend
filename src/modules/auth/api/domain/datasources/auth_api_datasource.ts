@@ -6,5 +6,6 @@ export default abstract class IAuthApiDatasource<Api> {
     abstract api: Api;
     abstract signIn(auth: Auth): Promise<Credential>;
     abstract signUp(user: User): Promise<void>;
+    abstract forgotPassword(email: string): Promise<void>;
 }
 

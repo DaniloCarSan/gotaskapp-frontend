@@ -44,6 +44,11 @@ export class AuthRepository implements IAuthRepository<AxiosInstance> {
     async signUp(user: User): Promise<void> {
         return await this.apiDataSource.signUp(user);
     }
+
+    async forgotPassword(email: string): Promise<void> {
+        return await this.apiDataSource.forgotPassword(email);
+    }
+
 }
 
 export const instance = new AuthRepository(instanceAuthApiDatasource, instanceAuthLocalDatasource);

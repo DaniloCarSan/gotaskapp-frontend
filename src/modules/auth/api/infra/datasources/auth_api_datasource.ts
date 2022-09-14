@@ -35,6 +35,17 @@ export class AuthDatasource implements IAuthApiDatasource<AxiosInstance> {
             throw e;
         }
     }
+
+    async forgotPassword(email: string): Promise<void> {
+        try {
+            await this.api.post('/auth/send/email/password/reset', { email });
+        } catch (e) {
+            if (e instanceof AxiosError) {
+                throw e.response?.data;
+            }
+            throw e;
+        }
+    }
 }
 
 export const instance = new AuthDatasource(api);

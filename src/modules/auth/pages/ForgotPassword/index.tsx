@@ -1,28 +1,66 @@
 import * as React from 'react';
-import { Card, Typography, Box, TextField, Button } from '@mui/material';
+import { Card, Typography, Box, TextField, Button, CircularProgress, Snackbar, Alert } from '@mui/material';
 import { validateField, validateEmail } from '../../../../utils/validators/validators';
 import { Link } from 'react-router-dom';
+
 import Copyright from '../../../../utils/components/Copyright';
+import ForgotPasswordDialogSuccess from './Components/FortgotPasswordDialogSuccess';
+
+import { instance as authRepository } from '../../api/infra/repositories/auth_repository';
 
 const ForgotPasswordPage = () => {
 
-    const [email, setEmail] = React.useState('');
-    const [emailError, setEmailError] = React.useState<string | null>(null);
     const [isFormValid, setIsFormValid] = React.useState(false);
+    const [loading, setLoading] = React.useState(false);
+    const [success, setSuccess] = React.useState(false);
+    const [error, setError] = React.useState<string | null>(null);
 
+    /**
+     * Form fields
+    */
+    const [email, setEmail] = React.useState('');
+
+    /*
+    * Form fields errors
+    */
+    const [emailError, setEmailError] = React.useState<string | null>(null);
+
+    /**
+     * Check if form is valid
+    */
     React.useEffect(() => {
         setIsFormValid(emailError == null && email !== '');
     }, [email, emailError]);
 
+    /*
+    * Set and validate email
+    */
     const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(event.target.value);
         validateField(event.target.value, [
             validateEmail
         ], (msg) => setEmailError(msg));
     }
-
+    /*
+    * Handle form submit
+    */
     const handleSubmitForgotPassword = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-
+        event.preventDefault();
+        setLoading(true);
+        authRepository.forgotPassword(email)
+            .then(() => {
+                setLoading(false);
+                setSuccess(true);
+                setEmail('');
+            })
+            .catch((error) => {
+                setLoading(false);
+                if (error) {
+                    setError(error.message);
+                } else {
+                    setError('Unknown error');
+                }
+            });
     }
 
     return (
@@ -65,9 +103,9 @@ const ForgotPasswordPage = () => {
                     variant="contained"
                     sx={{ width: '100%', mt: 2 }}
                     onClick={handleSubmitForgotPassword}
-                    disabled={!isFormValid}
+                    disabled={!isFormValid || loading}
                 >
-                    Resetar senha
+                    {loading ? <CircularProgress color='primary' size={23} /> : 'Resetar senha'}
                 </Button>
 
                 <Box sx={{ height: 20 }} />
@@ -76,8 +114,21 @@ const ForgotPasswordPage = () => {
                     <Link to="/auth/sign/in" > Voltar </Link>
                 </Typography>
 
+                <Snackbar
+                    open={error != null}
+                    autoHideDuration={5000}
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'center', }}
+                    onClose={() => setError(null)}  >
+                    <Alert severity="error">
+                        {error}
+                    </Alert>
+                </Snackbar>
+
             </Card>
+
             <Copyright />
+
+            {success && <ForgotPasswordDialogSuccess />}
         </Box>
     );
 }
