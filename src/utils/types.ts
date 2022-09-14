@@ -8,3 +8,10 @@ export type reducerActionType = {
 export type actionsType = {
     [key: string]: (payload: any) => reducerActionType;
 }
+
+export type ApiResponseType<T> = {
+    status: boolean;
+    code: string;
+    message: string;
+    data?: T;
+}

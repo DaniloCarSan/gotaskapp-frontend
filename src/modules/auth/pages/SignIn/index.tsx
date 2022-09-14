@@ -7,6 +7,7 @@ import Copyright from '../../../../utils/components/Copyright';
 import { AppContext } from '../../../../context';
 
 import { instance as authRepository } from '../../api/infra/repositories/auth_repository';
+import { ApiResponseType } from '../../../../utils/types';
 
 const SignInPage = () => {
 
@@ -14,8 +15,12 @@ const SignInPage = () => {
     const { state, dispatch } = React.useContext(AppContext);
 
     const [isFormValid, setIsFormValid] = React.useState(false);
-    const [loading, setLoading] = React.useState(false);
-    const [error, setError] = React.useState<string | null>(null);
+
+    const [loadingSignIn, setLoadingSignin] = React.useState(false);
+    const [loadingEmailVerification, setLoadingEmailVerification] = React.useState(false);
+
+    const [responseSignIn, setResponseSignIn] = React.useState<ApiResponseType<any> | null>(null);
+    const [responseEmailVerification, setResponseEmailVerification] = React.useState<ApiResponseType<any> | null>(null);
 
     /**
      * Form fields
@@ -76,12 +81,18 @@ const SignInPage = () => {
     */
     const handleSubmitLogin = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         event.preventDefault();
-        setLoading(true);
+        setLoadingSignin(true);
         authRepository.signIn({
             email,
             password
         }).then((credential) => {
-            setLoading(false);
+            setResponseSignIn({
+                status: true,
+                message: 'Login successful',
+                data: credential,
+                code: "SUCCESS"
+            });
+            setLoadingSignin(false);
             dispatch({
                 type: 'SIGN_IN_SUCCESS',
                 payload: {
@@ -91,12 +102,30 @@ const SignInPage = () => {
             });
             navigate('/', { replace: true });
         }).catch((error) => {
-            setLoading(false);
-            if (error) {
-                setError(error.message);
-            } else {
-                setError('Unknown error');
-            }
+            setLoadingSignin(false);
+            setResponseSignIn(error);
+        });
+    }
+
+    /*
+    * Handle email verification
+    */
+    const handleEmailVerification = () => {
+        setLoadingEmailVerification(true);
+        authRepository.emailVerification(
+            email
+        ).then(() => {
+            setResponseSignIn(null);
+            setLoadingEmailVerification(false);
+            setResponseEmailVerification({
+                status: true,
+                message: "A link has been sent to your email, if it's not in your inbox check your box span.",
+                data: null,
+                code: "SUCCESS"
+            });
+        }).catch((error: ApiResponseType<any>) => {
+            setLoadingEmailVerification(false);
+            setResponseEmailVerification(error);
         });
     }
 
@@ -153,9 +182,9 @@ const SignInPage = () => {
                     variant="contained"
                     sx={{ width: '100%', mt: 2 }}
                     onClick={handleSubmitLogin}
-                    disabled={!isFormValid || loading}
+                    disabled={!isFormValid || loadingSignIn}
                 >
-                    {loading ? <CircularProgress color='primary' size={23} /> : 'Entrar'}
+                    {loadingSignIn ? <CircularProgress color='primary' size={23} /> : 'Entrar'}
                 </Button>
 
                 <Box sx={{ height: 20 }} />
@@ -173,15 +202,49 @@ const SignInPage = () => {
             </Card>
             <Copyright />
 
-            <Snackbar
-                open={error != null}
-                autoHideDuration={3000}
+            {responseSignIn != null && (responseSignIn?.status ? <Snackbar
+                open={true}
+                autoHideDuration={8000}
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'center', }}
-                onClose={() => setError(null)}  >
-                <Alert severity="error">
-                    {error}
+                onClose={() => setResponseSignIn(null)}
+            >
+                <Alert severity="error" >
+                    {responseSignIn.message}
                 </Alert>
-            </Snackbar>
+            </Snackbar> : null
+            )}
+
+            {responseSignIn != null && <Snackbar
+                open={true}
+                autoHideDuration={8000}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center', }}
+                onClose={() => setResponseEmailVerification(null)}
+            >
+                <Alert
+                    severity="error"
+                    action={!loadingEmailVerification && responseSignIn.code === "EMAIL_NOT_VERIFIED" ? <Button
+                        color="error"
+                        size="small"
+                        onClick={handleEmailVerification}
+                    >
+                        Get link
+                    </Button> : <CircularProgress color='primary' size={23} />
+                    }
+                >
+                    {responseSignIn.message}
+                </Alert>
+            </Snackbar>}
+
+            {responseEmailVerification != null && <Snackbar
+                open={true}
+                autoHideDuration={8000}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center', }}
+                onClose={() => setResponseEmailVerification(null)}
+            >
+                <Alert severity={responseEmailVerification.status ? "success" : "error"} >
+                    {responseEmailVerification.message}
+                </Alert>
+            </Snackbar>}
 
         </Box>
     );

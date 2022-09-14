@@ -13,4 +13,5 @@ export default abstract class IAuthRepository<T> {
     abstract signOut(): void;
     abstract signUp(user: User): Promise<void>;
     abstract forgotPassword(email: string): Promise<void>;
+    abstract emailVerification(email: string): Promise<void>;
 }

@@ -49,6 +49,9 @@ export class AuthRepository implements IAuthRepository<AxiosInstance> {
         return await this.apiDataSource.forgotPassword(email);
     }
 
+    async emailVerification(email: string): Promise<void> {
+        return await this.apiDataSource.emailVerification(email);
+    }
 }
 
 export const instance = new AuthRepository(instanceAuthApiDatasource, instanceAuthLocalDatasource);

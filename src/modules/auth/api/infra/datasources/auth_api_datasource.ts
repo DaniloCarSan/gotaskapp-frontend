@@ -9,6 +9,15 @@ export class AuthDatasource implements IAuthApiDatasource<AxiosInstance> {
 
     api: AxiosInstance;
 
+    errorDefault(e: any): any {
+        return {
+            status: false,
+            code: 'ERROR_DEFAULT',
+            message: e.message,
+            data: null
+        }
+    }
+
     constructor(api: AxiosInstance) {
         this.api = api;
     }
@@ -16,12 +25,12 @@ export class AuthDatasource implements IAuthApiDatasource<AxiosInstance> {
     async signIn(auth: Auth): Promise<Credential> {
         try {
             const response = await this.api.post('/auth/sign/in', auth);
-            return response.data as Credential;
+            return response.data.data as Credential;
         } catch (e) {
             if (e instanceof AxiosError) {
                 throw e.response?.data;
             }
-            throw e;
+            throw this.errorDefault(e);
         }
     }
 
@@ -32,7 +41,7 @@ export class AuthDatasource implements IAuthApiDatasource<AxiosInstance> {
             if (e instanceof AxiosError) {
                 throw e.response?.data;
             }
-            throw e;
+            throw this.errorDefault(e);
         }
     }
 
@@ -43,7 +52,20 @@ export class AuthDatasource implements IAuthApiDatasource<AxiosInstance> {
             if (e instanceof AxiosError) {
                 throw e.response?.data;
             }
-            throw e;
+            throw this.errorDefault(e);
+        }
+    }
+
+    async emailVerification(email: string): Promise<void> {
+        try {
+            await this.api.post('/auth/send/email/verification', { email });
+        } catch (e) {
+
+            if (e instanceof AxiosError) {
+                throw e.response?.data;
+            }
+
+            throw this.errorDefault(e);
         }
     }
 }
