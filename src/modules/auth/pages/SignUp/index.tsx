@@ -7,13 +7,13 @@ import Copyright from '../../../../utils/components/Copyright';
 import SignUpDialogSuccess from './Components/SignUpDialogSuccess';
 
 import { instance as authRepository } from '../../api/infra/repositories/auth_repository';
+import { ApiResponseType } from '../../../../utils/types';
 
 const SignUpPage = () => {
 
     const [isFormValid, setIsFormValid] = React.useState(false);
     const [loading, setLoading] = React.useState(false);
-    const [success, setSuccess] = React.useState(false);
-    const [error, setError] = React.useState<string | null>(null);
+    const [response, setResponse] = React.useState<ApiResponseType<any> | null>(null);
 
     /**
      *  Form fields 
@@ -133,16 +133,16 @@ const SignUpPage = () => {
             password: password
         }).then((response) => {
             setLoading(false);
-            setSuccess(true);
             resetForm();
-        }).catch((error) => {
-            setSuccess(false);
+            setResponse({
+                status: true,
+                message: 'Account created successfully, a verification link has been sent to your email.',
+                data: null,
+                code: "SUCCESS"
+            });
+        }).catch((error: ApiResponseType<any>) => {
             setLoading(false);
-            if (error) {
-                setError(error.message);
-            } else {
-                setError('Unknown error');
-            }
+            setResponse(error);
         });
     }
 
@@ -253,17 +253,17 @@ const SignUpPage = () => {
 
             <Copyright />
 
-            <Snackbar
-                open={error != null}
+            {response != null && !response.status && <Snackbar
+                open={true}
                 autoHideDuration={5000}
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'center', }}
-                onClose={() => setError(null)}  >
+                onClose={() => setResponse(null)}  >
                 <Alert severity="error">
-                    {error}
+                    {response.message}
                 </Alert>
-            </Snackbar>
+            </Snackbar>}
 
-            {success && <SignUpDialogSuccess />}
+            {response != null && response.status && <SignUpDialogSuccess />}
 
         </Box>
     );
